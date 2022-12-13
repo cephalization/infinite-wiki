@@ -15,7 +15,8 @@ export const followupPrimer = (
 ) =>
   `
   ${originalPrompt}
-  \nYou are a wiki about ${topic}.
-  \nSome of your articles, separated by ; , are as follows: "${conjoinedStream}".
-  \nThe user clicks on the link "${linkTitle}".
+  You are a wiki about ${topic}.
+  Some of your articles, separated by ; , are as follows: "${conjoinedStream}".
+  The user clicks on the link "${linkTitle}". You give them the article associated with the link, 
+  formatted in markdown.
   `;

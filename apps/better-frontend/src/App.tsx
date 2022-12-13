@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { FormEvent, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Header } from "./components/Header";
+import { Puff } from "./components/Puff";
+import { Landing } from "./Landing";
 import { followupPrimer, initialPrimer } from "./prompts";
 
 const API_HOST = import.meta.env.VITE_API_HOST || "http://localhost:5001";
@@ -77,61 +79,70 @@ export default function App() {
   console.log({ streamLength: stream.length });
 
   return (
-    <div className="p-2 sm:rounded-md flex w-full flex-wrap gap-4">
-      <Header className="flex w-full">Infinite Wiki</Header>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-wrap w-full items-start gap-2"
-        ref={ref}
-      >
-        <input
-          disabled={loading}
-          className="rounded w-full px-2 py-1 text-neutral-800 bg-neutral-300 shadow-inner shadow-zinc-800 focus:outline-zinc-500"
-          name="search"
-          placeholder="Search for a topic"
-          type="search"
-          autoComplete="off"
-        />
-        <button
-          disabled={loading}
-          className="p-2 py-1 bg-zinc-700 text-zinc-300 rounded disabled:text-slate-300"
+    <div className="flex w-full flex-wrap gap-4">
+      <nav className="p-2 bg-neutral-800 flex w-full border-b border-zinc-700">
+        <Header className="flex w-full my-0">Infinite Wiki</Header>
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full items-start gap-2"
+          ref={ref}
         >
-          Search
-        </button>
-      </form>
-      <div
-        className={clsx(
-          "whitespace-pre-wrap p-4 rounded-sm bg-neutral-700 w-full text-white",
-          (loading || data?.article) && "shadow-inner shadow-zinc-900",
-          "transition-all duration-200"
-        )}
-      >
-        {loading ? (
-          "Loading"
-        ) : data?.article ? (
-          <ReactMarkdown
-            components={{
-              a: ({ children, ...props }) => (
-                <a
-                  {...props}
-                  children={children}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    handleLink({ linkTitle: String(children) });
-                  }}
-                  className="underline text-blue-400"
-                />
-              ),
-              h1: (props) => <h1 {...props} className="font-bold" />,
-            }}
-            children={data.article}
+          <input
+            disabled={loading}
+            className="rounded w-full px-2 py-1 text-zinc-400 placeholder:text-zinc-500 bg-neutral-700 shadow-inner shadow-zinc-900 focus:outline-zinc-500"
+            name="search"
+            placeholder="Search Infinite Wiki"
+            type="search"
+            autoComplete="off"
           />
-        ) : (
-          ""
-        )}
-      </div>
+          <button
+            disabled={loading}
+            className="p-2 py-1 bg-zinc-700 text-zinc-300 rounded disabled:text-slate-300"
+          >
+            Search
+          </button>
+        </form>
+      </nav>
+
+      {(loading || data?.article) && (
+        <div
+          className={clsx(
+            "p-2 sm:p-4 text-zinc-200 shadow-md shadow-zinc-900 rounded w-full bg-neutral-700 m-1 sm:m-8",
+            "transition-all duration-200 whitespace-pre-line"
+          )}
+        >
+          {loading ? (
+            <div className="flex items-center justify-center h-full w-full">
+              <Puff />
+            </div>
+          ) : data?.article ? (
+            <ReactMarkdown
+              components={{
+                a: ({ children, ...props }) => (
+                  <a
+                    {...props}
+                    children={children}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      handleLink({ linkTitle: String(children) });
+                    }}
+                    className="underline text-blue-400"
+                  />
+                ),
+                h1: (props) => <Header {...props} />,
+                h2: (props) => <Header as="h2" {...props} />,
+                h3: (props) => <Header as="h3" {...props} />,
+                h4: (props) => <Header as="h4" {...props} />,
+                ul: (props) => <ul className="my-1" {...props} />,
+              }}
+              children={data.article}
+            />
+          ) : null}
+        </div>
+      )}
+      <Landing />
     </div>
   );
 }
