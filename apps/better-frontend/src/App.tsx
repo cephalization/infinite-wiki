@@ -2,8 +2,10 @@ import { FormEvent, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { followupPrimer, initialPrimer } from "./prompts";
 
+const API_HOST = import.meta.env.VITE_API_HOST || "http://localhost:5001";
+
 const askEndpoint = (body: Record<string, unknown>) =>
-  fetch("http://localhost:5001/ask", {
+  fetch(`${API_HOST}/ask`, {
     method: "POST",
     body: JSON.stringify(body),
     headers: {
