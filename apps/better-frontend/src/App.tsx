@@ -80,16 +80,16 @@ export default function App() {
 
   return (
     <div className="flex w-full flex-wrap gap-4">
-      <nav className="p-2 bg-neutral-800 flex w-full border-b border-zinc-700">
-        <Header className="flex w-full my-0">Infinite Wiki</Header>
+      <nav className="p-2 bg-neutral-800 flex justify-center w-full border-b border-zinc-700">
         <form
           onSubmit={handleSubmit}
-          className="flex w-full items-start gap-2"
+          className="flex w-full max-w-7xl items-center gap-2 justify-end flex-wrap"
           ref={ref}
         >
+          <Header className="grow basis-36 w-full my-0">Infinite Wiki</Header>
           <input
             disabled={loading}
-            className="rounded w-full px-2 py-1 text-zinc-400 placeholder:text-zinc-500 bg-neutral-700 shadow-inner shadow-zinc-900 focus:outline-zinc-500"
+            className="rounded px-2 py-1 grow basis-96 text-zinc-400 placeholder:text-zinc-500 bg-neutral-700 focus:outline-zinc-500"
             name="search"
             placeholder="Search Infinite Wiki"
             type="search"
@@ -97,7 +97,7 @@ export default function App() {
           />
           <button
             disabled={loading}
-            className="p-2 py-1 bg-zinc-700 text-zinc-300 rounded disabled:text-slate-300"
+            className="p-2 py-1 grow basis-4 bg-zinc-700 text-zinc-300 rounded disabled:text-slate-300"
           >
             Search
           </button>

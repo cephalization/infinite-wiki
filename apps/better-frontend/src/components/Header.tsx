@@ -17,7 +17,7 @@ const classes = {
 
 export const Header = ({ className, as = "h1", ...props }: HeaderProps) => {
   return createElement(as, {
-    className: clsx(className, classes[as]),
+    className: clsx(classes[as], className),
     ...props,
   });
 };
