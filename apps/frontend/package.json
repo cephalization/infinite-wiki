@@ -1,0 +1,43 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run build:css && remix build",
+    "build:css": "tailwindcss -m -i ./styles/app.css -o ./app/styles/app.css",
+    "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
+    "dev:css": "tailwindcss -w -i ./styles/app.css -o ./app/styles/app.css",
+    "start": "remix-serve build",
+    "lint": "tsc --noEmit && TIMING=1 eslint \"./**/*.ts*\"",
+    "clean": "rm -rf .cache .turbo build public/build node_modules"
+  },
+  "dependencies": {
+    "@remix-run/node": "deferred",
+    "@remix-run/react": "deferred",
+    "clsx": "^1.2.1",
+    "isbot": "^3.6.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ui": "*"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "deferred",
+    "@remix-run/serve": "deferred",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "autoprefixer": "^10.4.13",
+    "concurrently": "^7.5.0",
+    "eslint": "^8.26.0",
+    "eslint-config-custom": "*",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.17",
+    "tailwind-config": "*",
+    "tailwindcss": "^3.1.8",
+    "tsconfig": "*",
+    "typescript": "^4.8.3"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
