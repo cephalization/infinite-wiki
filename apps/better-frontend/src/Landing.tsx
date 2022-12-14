@@ -5,57 +5,53 @@ const colors = ["lightblue", "lightgreen", "lightcoral"] as const;
 function blob(
   canvas: HTMLCanvasElement,
   waveHeight = 50,
-  runs = 3,
-  color = "lightblue"
+  color = "lightblue",
+  eraser = false,
+  lag = 300
 ) {
   const ctx = canvas.getContext("2d");
 
   if (ctx) {
     const width = canvas.width;
     const height = canvas.height;
+    const delta = Math.floor(width / 256);
+    const iLag = eraser ? Math.floor(delta * lag) : 0;
 
-    // for (let x = 0; x < width; x++) {
-    //   // Generate the y-value for the wave
-    //   let y = Math.sin((x * Math.PI) / 180) * 50 + height / 2;
-
-    //   // Set the fill style to a light blue color
-    //   ctx.fillStyle = "lightblue";
-
-    //   // Draw a rectangle at the x and y coordinates
-    //   ctx.fillRect(x, y, 1, 1);
-    // }
-
-    let xPos = 0;
-    let heightFactor = height - height / 8;
+    let xPos = 0 - iLag;
+    let heightFactor = Math.floor(height - height / 8);
 
     const animate = () => {
-      // Clear the canvas
-      // ctx.clearRect(0, 0, width, height);
-
       // Generate the y-value for the wave
-      let y = Math.sin((xPos * Math.PI) / 180) * waveHeight + heightFactor;
+      let y = Math.floor(
+        Math.sin((xPos * Math.PI) / 180) * waveHeight + heightFactor
+      );
 
       // Set the fill style to a light blue color
       ctx.fillStyle = color;
 
       // Draw a rectangle at the x and y coordinates
-      ctx.fillRect(xPos, y, 2, 2);
+      if (xPos >= 0 && !eraser) {
+        ctx.fillRect(xPos, y, 2, 2);
+      }
+
+      if (xPos >= 0 && eraser) {
+        ctx.clearRect(xPos, y, 2, 2);
+      }
 
       // Increase the x-position
-      xPos += 3;
+      xPos += delta;
 
       if (xPos > width) {
         xPos = 0;
-        heightFactor = heightFactor - height / 8;
+        heightFactor = Math.floor(heightFactor - height / 8);
       }
 
       // Animate the wave
-      if (heightFactor + height / 4 > waveHeight) {
+      if (Math.floor(heightFactor + height / 8) > waveHeight) {
         setTimeout(() => requestAnimationFrame(animate), 1000 / 120);
+      } else {
+        blob(canvas, waveHeight * 1.1, color, eraser, lag);
       }
-      // else if (runs > 0) {
-      //   blob(canvas, waveHeight * 1.1, runs - 1, color);
-      // }
     };
 
     // Start the animation
@@ -80,9 +76,10 @@ export const Landing = () => {
 
       console.log(waves);
 
-      waves
-        .reverse()
-        .forEach((w) => ref.current && blob(ref.current, w, 0, "lightcoral"));
+      waves.reverse().forEach((w) => {
+        ref.current && blob(ref.current, w, "lightcoral");
+        ref.current && blob(ref.current, w, "lightcoral", true, 600);
+      });
     }
   }, []);
 
