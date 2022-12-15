@@ -3,6 +3,7 @@ import { FormEvent, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Header } from "./components/Header";
 import { Puff } from "./components/Puff";
+import { Xmark } from "./components/Xmark";
 import { Landing } from "./Landing";
 import { followupPrimer, initialPrimer } from "./prompts";
 
@@ -26,7 +27,10 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [stream, setStream] = useState<{ data: string; type: "article" }[]>([]);
   const [originalPrompt, setOriginalPrompt] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState<string | null>(null);
+
+  const disabled = loading || !search || search === submittedSearch;
 
   const handleAsk = async ({ prompt }: { prompt: string }) => {
     setLoading(true);
@@ -51,7 +55,9 @@ export default function App() {
     e.preventDefault();
     e.stopPropagation();
 
-    if (ref.current) {
+    e.currentTarget;
+
+    if (ref.current && !disabled) {
       const formBody = new FormData(ref.current);
       const search = formBody.get("search") as string;
 
@@ -76,7 +82,13 @@ export default function App() {
     return handleAsk({ prompt });
   };
 
-  console.log({ streamLength: stream.length });
+  const handleReset = () => {
+    setStream([]);
+    setData(null);
+    setSubmittedSearch(null);
+    setOriginalPrompt(null);
+    setSearch("");
+  };
 
   return (
     <div className="flex w-full flex-wrap gap-4">
@@ -94,10 +106,12 @@ export default function App() {
             placeholder="Search Infinite Wiki"
             type="search"
             autoComplete="off"
+            value={search}
+            onChange={(e) => setSearch(e.currentTarget.value)}
           />
           <button
-            disabled={loading}
-            className="p-2 py-1 grow basis-4 bg-zinc-700 text-zinc-300 rounded disabled:text-slate-300"
+            disabled={loading || !search || search === submittedSearch}
+            className="p-2 py-1 grow basis-4 bg-zinc-700 text-zinc-300 rounded disabled:text-zinc-500 transition-colors duration-300"
           >
             Search
           </button>
@@ -108,9 +122,16 @@ export default function App() {
         <div
           className={clsx(
             "p-2 sm:p-4 text-zinc-200 shadow-md shadow-zinc-900 rounded w-full bg-neutral-700 m-1 sm:m-8",
-            "transition-all duration-200 whitespace-pre-line"
+            "transition-all duration-200 whitespace-pre-line relative"
           )}
         >
+          {!loading && (
+            <div className="flex w-full justify-end absolute top-2 right-2">
+              <button onClick={handleReset}>
+                <Xmark className="hover:text-white hover:cursor-pointer hover:animate-pulse" />
+              </button>
+            </div>
+          )}
           {loading ? (
             <div className="flex items-center justify-center h-full w-full">
               <Puff />
