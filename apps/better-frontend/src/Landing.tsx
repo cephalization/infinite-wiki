@@ -74,8 +74,6 @@ export const Landing = () => {
         waves[i] = Math.min((waves?.[i - 1] ?? 50) * 1.1, 100);
       }
 
-      console.log(waves);
-
       waves.reverse().forEach((w) => {
         ref.current && blob(ref.current, w, "lightcoral");
         ref.current && blob(ref.current, w, "lightcoral", true, 600);
