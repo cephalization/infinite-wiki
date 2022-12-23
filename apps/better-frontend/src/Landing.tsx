@@ -50,7 +50,7 @@ function blob(
       if (Math.floor(heightFactor + height / 8) > waveHeight) {
         setTimeout(() => requestAnimationFrame(animate), 1000 / 120);
       } else {
-        blob(canvas, waveHeight * 1.1, color, eraser, lag);
+        blob(canvas, waveHeight, color, eraser, lag);
       }
     };
 

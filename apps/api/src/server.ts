@@ -43,24 +43,27 @@ export const createServer = (openai: OpenAIApi) => {
     .post("/ask", async (req, res) => {
       const { prompt } = req.body;
 
-      if (typeof prompt === "string") {
-        const response = await openai.createCompletion({
-          model: "text-davinci-003",
-          prompt,
-          temperature: 0.7,
-          max_tokens: 2000,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-        });
+      try {
+        if (typeof prompt === "string") {
+          const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt,
+            temperature: 0.7,
+            max_tokens: 2000,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+          });
 
-        return res.json({
-          article: response.data?.choices?.pop()?.text,
-          originalPrompt: prompt,
-        });
+          return res.json({
+            article: response.data?.choices?.pop()?.text,
+            originalPrompt: prompt,
+          });
+        }
+        return res.status(401).send();
+      } catch (e) {
+        return res.status(500).send(e as Error);
       }
-
-      return res.status(401).send();
     });
 
   return app;
