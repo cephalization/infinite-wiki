@@ -9,8 +9,7 @@
     "clean": "turbo run clean",
     "dev": "turbo run dev --no-cache --parallel --continue",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "turbo run lint",
-    "test": "turbo run test"
+    "lint": "turbo run lint"
   },
   "devDependencies": {
     "prettier": "latest",
